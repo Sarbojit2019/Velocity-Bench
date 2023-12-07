@@ -27,7 +27,12 @@ set(CMAKE_MODULE_PATH "${ROCM_PATH}/hip/cmake" ${CMAKE_MODULE_PATH})
 set(HIP_INCLUDE_DIRS  "${ROCM_PATH}/include"   ${HIP_INCLUDE_DIRS})
 set(HIP_LIBRARIES     "${ROCM_PATH}/lib"       ${HIP_LIBRARIES})
 
-set(DEF_WL_CXX_FLAGS           " -D__HIP_PLATFORM_AMD__ ")
+if (DEFINED USE_CHIPSTAR)
+    set(DEF_WL_CXX_FLAGS           " -D__HIP_PLATFORM_SPIRV__ ")
+else()
+    set(DEF_WL_CXX_FLAGS           " -D__HIP_PLATFORM_AMD__ ")
+endif()
+
 set(DEF_GENERAL_CXX_FLAGS      " -O3 -std=c++17 -ffast-math ")
 set(DEF_COMBINED_CXX_FLAGS     "${DEF_GENERAL_CXX_FLAGS} ${DEF_WL_CXX_FLAGS}")
 
@@ -62,4 +67,8 @@ include_directories(
 
 add_executable(hashtable ${SOURCES})
 
-target_link_libraries(hashtable -L${HIP_LIBRARIES})
+if (DEFINED USE_CHIPSTAR)
+    target_link_libraries(hashtable -Lchip)
+else()
+    target_link_libraries(hashtable -L${HIP_LIBRARIES})
+endif()

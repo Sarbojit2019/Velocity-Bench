@@ -24,7 +24,12 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-set(DEF_WL_CXX_FLAGS           " -D__HIP_PLATFORM_AMD__ ")
+if (DEFINED USE_CHIPSTAR)
+    set(DEF_WL_CXX_FLAGS           " -D__HIP_PLATFORM_SPIRV__ ")
+else()
+    set(DEF_WL_CXX_FLAGS           " -D__HIP_PLATFORM_AMD__ ")
+endif()
+
 set(DEF_GENERAL_CXX_FLAGS      " -O3 -std=c++17 -ffast-math ")
 set(DEF_COMBINED_CXX_FLAGS     "${DEF_GENERAL_CXX_FLAGS} ${DEF_WL_CXX_FLAGS}")
 
